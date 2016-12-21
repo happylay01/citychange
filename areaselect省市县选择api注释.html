@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+  <link rel="stylesheet" type="text/css" href="http://static.loji.com/avenger/js/plugin/static/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="http://static.loji.com/avenger/css/g.css">
+  <style type="text/css">
+   .map_container{
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    right: 400px;
+    top:50px;
+   }
+   dd{margin-left: 0;}
+   .area_name .area_title{margin-bottom: 0;}
+   .table_gray_hasLine thead td{text-align: center;}
+   .table_gray_hasLine tbody td{height: 35px;vertical-align: middle;}
+   .table_gray_hasLine tbody tr td{text-align: left;padding-left: 20px;}
+   .em2{width: 1em;display: inline-block;}
+   blockquote{margin-top: 20px;}
+
+   .cityClear{padding: 10px 10px 0;text-align: right}
+
+  </style>
+</head>
+<body>
+<div class="container-fluid" style="padding:20px 0">
+  <div style="padding:20px">
+
+    <div class="lj_select" id="areaSelectUtil" data-pid="1240000000" data-cid="1240400000" data-tid="1240405000">
+      <div class="area_name">
+        <span class="area_title">请选择省市县</span>
+        <span class="arrow"></span>
+      </div>
+      <div class="city_content">
+        <div class="select_tab">
+          <a href="javascript:;" class="first current" data-to="province_list">省份</a>
+          <a href="javascript:;" data-to="city_list">城市</a>
+          <a href="javascript:;" data-to="county_list">县区</a>
+        </div>
+        <!-- <div class="cityClear">
+          <a href="">清空搜索</a>
+        </div> -->
+        <div class="areaListWar">
+          <div class="area_list province_list"></div>
+          <div class="area_list city_list"></div>
+          <div class="area_list county_list"></div>
+        </div>
+      </div>
+      <div class="city_add_list"></div>
+    </div>
+
+  </div>
+
+
+  <div style="padding:20px">
+
+    <h3>调用方式</h3>
+    <div>
+      var areaChange = new areaSelectChange("areaSelectUtil",{<br />
+      <span class="em2"></span>hasHot: false,<br />
+      <span class="em2"></span>inputFlag: false,<br />
+      <span class="em2"></span>hideCounty: false,<br />
+      <span class="em2"></span>hideCity: true,<br />
+      <span class="em2"></span>historyShow: false,<br />
+      <span class="em2"></span>hideName: {<br />
+      <span class="em2"></span><span class="em2"></span>hotcityName: "hotcity",<br />
+      <span class="em2"></span><span class="em2"></span>provinceName: "add_zhengche_Province",<br />
+      <span class="em2"></span><span class="em2"></span>cityName: "add_zhengche_City",<br />
+      <span class="em2"></span><span class="em2"></span>countyName: "add_zhengche_County"<br />
+      <span class="em2"></span>},<br />
+      <span class="em2"></span>clearFlag: false<br />
+
+      });<br />
+    </div>
+  </div>
+
+  <div style="padding:20px">
+    <h3>省市县选择插件</h3>
+    <blockquote>
+      <p>实现省市县选择功能，把省市县对应code或汉字与后台交互，<br />并根据后台的code／汉字 反查对应汉字／code</p>
+    </blockquote>
+    <table class="table_gray table_gray_hasLine">
+      <thead>
+        <tr>
+          <td>属性</td>
+          <td>类型</td>
+          <td>注释</td>
+          <td>默认值</td>
+          <td>备注</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>hasHot</td>
+          <td>boolean</td>
+          <td>是否显示热门选项</td>
+          <td>false</td>
+          <td>暂无该场景（废弃）</td>
+        </tr>
+        <tr>
+          <td>inputFlag</td>
+          <td>boolean</td>
+          <td>是否支持输入</td>
+          <td>false</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>hideCounty</td>
+          <td>boolean</td>
+          <td>是否显示县一级</td>
+          <td>false</td>
+          <td>只需要选择 省 － 市</td>
+        </tr>
+        <tr>
+          <td>hideCity</td>
+          <td>boolean</td>
+          <td>是否显示市一级</td>
+          <td>false</td>
+          <td>只需要选择 省</td>
+        </tr>
+        <tr>
+          <td>hideName</td>
+          <td>object</td>
+          <td>与后端交互用到的input对象</td>
+          <td>{}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>hideName.provinceName</td>
+          <td>string</td>
+          <td>与后端交互用到的省的inputname</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>hideName.cityName</td>
+          <td>string</td>
+          <td>与后端交互用到的市的inputname</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>hideName.countyName</td>
+          <td>string</td>
+          <td>与后端交互用到的县的inputname</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>clearFlag</td>
+          <td>boolean</td>
+          <td>是否需要清除input的值和显示的值 的交互</td>
+          <td>false</td>
+          <td>moss有的是需要的</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <blockquote>
+      <p>内部方法</p>
+    </blockquote>
+    <table class="table_gray table_gray_hasLine">
+      <thead>
+        <tr>
+          <td>方法名</td>
+          <td>参数</td>
+          <td>注释</td>
+          <td>备注</td>
+          <td>返回值</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>init</td>
+          <td>无</td>
+          <td>初始化事件</td>
+          <td></td>
+          <td>无</td>
+        </tr>
+        <tr>
+          <td>renderDom</td>
+          <td>无</td>
+          <td>初始化部分dom结构</td>
+          <td></td>
+          <td>无</td>
+        </tr>
+        <tr>
+          <td>bindEvents</td>
+          <td>无</td>
+          <td>给dom元素绑定事件</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>showPanel</td>
+          <td>无</td>
+          <td>展示省市县弹窗</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>hidePanel</td>
+          <td>无</td>
+          <td>隐藏省市县弹窗</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>showHotCitys</td>
+          <td>无</td>
+          <td>显示热门城市选择dom</td>
+          <td>无此场景（废弃）</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>showProvince</td>
+          <td>PROVINCELIST 省 对象</td>
+          <td>初始化省的dom元素，并显示省的选择签</td>
+          <td>provinces-hotcities.js内全局常量</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>showAddList</td>
+          <td>keywords</td>
+          <td>根据输入的拼音或者汉字匹配城市和县</td>
+          <td>需要请求后台接口 place/query </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>showCity</td>
+          <td>pid:省份id/市id, <br />listCls:渲染子数据的dom,<br />origin:t/c 点击的时候用到的</td>
+          <td>显示市或县的dom结构</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>tabChange</td>
+          <td>无</td>
+          <td>切换省市县dom元素</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>tabItem</td>
+          <td>无</td>
+          <td>切换省市县 标头的tab</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>selectCurrentItem</td>
+          <td>无</td>
+          <td>如果默认的区域有值，根据提供的<br />省、市、县选中列表中的当前元素</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>showSelectAddress</td>
+          <td>pid:省code, <br />cid:市code, <br />tid:县code</td>
+          <td>如果通过历史记录选择或者手动输入选择填入地址之后，在点击出来的省市县弹层中要对应选中所选的省市县</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>createHideIpt</td>
+          <td>无</td>
+          <td>创建可以存住code的input type="hide"</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>setHistorySearchCookie</td>
+          <td>无</td>
+          <td>保存查询历史记录cookie(点击查询的时候执行)</td>
+          <td>搜索历史记录（原首页有，目前无入口）</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>isCorrectAddress</td>
+          <td>无</td>
+          <td>判断输入的地址是否是有效的</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>isProCityCounty</td>
+          <td>val:要判断的省市县字符串,<br />cityArr:省市县code表<br />, pCode:父级code</td>
+          <td>判断输入的省市县是否是正确的，正确的话返回省市县对应的code</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>showErrorTips</td>
+          <td>无</td>
+          <td>显示错误提示</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>hideErrorTips</td>
+          <td>无</td>
+          <td>隐藏错误提示</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>isRepeatCookie</td>
+          <td>arr：, <br />str：</td>
+          <td>判断要新加入的cookie是否已经存在</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>createHistoryCityDom</td>
+          <td>无</td>
+          <td>生成搜索记录的dom结构（根据cookie里存的值）</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>fillInDataId</td>
+          <td>pid：省code,<br /> cid：市code, <br />tid：县code</td>
+          <td>手动输入地址或者从历史记录中选择。填充所查询的地址id</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>getProNameByCode</td>
+          <td>codeId：省code</td>
+          <td>根据code获取省的名字</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>getCityNameByCode</td>
+          <td>codeId：市／县名字</td>
+          <td>根据code获取市/县的名字</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>getProCodeByName</td>
+          <td>name：省名字</td>
+          <td>根据名字获取省的code</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>getCityCodeByName</td>
+          <td>name：市／县名字</td>
+          <td>根据市／县获取市/县的code</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>getRegions</td>
+          <td>str:行政区划名字</td>
+          <td>根据名字或者code获取完整的行政区划</td>
+          <td>LOJICity.getRegions("深州") <br ／>LOJICity.getRegions("1030903000")</td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>getRegionsSimple</td>
+          <td>str:行政区划名字</td>
+          <td>根据名字或者code获取完整的行政区划</td>
+          <td>LOJICity.getRegionsSimple("深州") <br ／>LOJICity.getRegionsSimple("1030903000")<br />
+            和上面方法重复了。</td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>getAreaDataByCode</td>
+          <td>code:行政区划code</td>
+          <td>根据code获取所在的行政区划对象</td>
+          <td>LOJICity.getAreaDataByCode("1030903000")</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>getProFullNameByCode</td>
+          <td>codeId:省code</td>
+          <td>根据code获取省的名字</td>
+          <td>LOJICity.getProFullNameByCode("1030000000")</td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>getCityFullNameByCode</td>
+          <td>codeId:市/县code</td>
+          <td>根据code获取市／县的名字</td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>getFullNameByCode</td>
+          <td>code:行政区划code</td>
+          <td>根据code获取行政区划的名字</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>getProvinceCodeByCityCode</td>
+          <td>cityCode:市code</td>
+          <td>通过城市Code查找省code </td>
+          <td>LOJICity.getProvinceCodeByCityCode(1010000000)</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>resetSelect</td>
+          <td>setTopStr:重置后的提示字符串</td>
+          <td>点击重置，把现有的字符串重置</td>
+          <td></td>
+          <td></td>
+        </tr>
+        
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+
+
+<!-- data-pid="1240000000" data-cid="1240400000" data-tid="1240405000" -->  
+  
+
+<script src="http://static.loji.com/avenger/js/jquery-1.11.2.min.js"></script>
+<script src="http://static.loji.com/avenger/js/form-vali-md5.min.js"></script>
+<script src="http://static.loji.com/avenger/js/pubfunc.js"></script>
+
+<script src="js/areachange/provinces-hotcities.js"></script>
+<script src="js/areachange/cities.js"></script>
+<script src="js/areachange/area_selectchangeV3.js"></script>
+
+<!-- <script src="http://static.loji.com/avenger/js/plugin/citychange/citychange-v3.min.js"></script>
+ -->
+<script type="text/javascript">
+var areaChangeFrom = new areaSelectChange("areaSelectUtil", {
+  hasHot: false,
+  inputFlag: false,
+  // hideCounty: true,
+  // hideCity: true,
+  clearFlag:true,
+  hideName: {
+    provinceName: "startProvince",
+    cityName: "startCity",
+    countyName: "startCounty"
+  }
+});
+
+  // console.log(areaChange.getRegions("河北"));
+  // console.log(areaChange.getRegions("1030000000"))
+  
+  // console.log(areaChange.getRegions("衡水"));
+  // console.log(areaChange.getRegions("1030900000"));
+
+  // console.log(areaChange.getRegions("深州"));
+  // console.log(areaChange.getRegions("1030903000"));
+
+
+  // console.log(areaChange.getRegionsSimple("河北"));
+  // console.log(areaChange.getRegionsSimple("1030000000"));
+  
+  // console.log(areaChange.getRegionsSimple("衡水"));
+  // console.log(areaChange.getRegionsSimple("1030900000"));
+
+  // console.log(areaChange.getRegionsSimple("深州"));
+  // console.log(areaChange.getRegionsSimple("1030903000"));
+
+  function log(){
+    console.log("11");
+  }
+  $(document).ready(function(){
+    $("#J_trigger").unbind("click");
+    $("#J_trigger").bind("click",log);
+    $("#J_trigger").unbind("click");
+    $("#J_trigger").bind("click",log);
+    $("#J_trigger").unbind("click");
+    $("#J_trigger").bind("click",log);
+    $("#J_trigger").unbind("click");
+    $("#J_trigger").bind("click",log);
+  });
+  // console.log(areaChange.getFullNameByCode("1040200000"));
+
+  // console.log(areaChange.getFullNameByCode("1130000000"));
+
+  // console.log(areaChange.getCodeByName("河北"));
+
+
+</script> 
+</body>
+</html>
